@@ -2,7 +2,7 @@
 
 const Best = require("../models/bestproductModel");
 
-exports.BestProduct = async (req, res) => {
+exports.AddBestProduct = async (req, res) => {
   const bests = req.body;
 
   if (!Array.isArray(bests) || bests.length === 0) {
@@ -52,3 +52,24 @@ exports.BestProduct = async (req, res) => {
     });
   }   
 };
+
+exports.ShowBestProduct = async (req, res) => {
+  try {
+    const best = await Best.BestProductBySkinType();
+    res.status(200).json({
+      id: best.id,
+      name_product: best.name_product,
+      skin_type: best.skin_type,
+      category: best.category,
+      price: best.price,
+      rating: best.rating,
+      image_url: best.image_url,
+      store_url: best.store_url,
+    })
+  } catch (error) {
+    console.error("Error show best products", error);
+    res.status(500).json({
+      message:"Error Server"
+    })
+  }
+}

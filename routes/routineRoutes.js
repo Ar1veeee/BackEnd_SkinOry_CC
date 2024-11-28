@@ -11,14 +11,15 @@ const {
   DeleteNightRoutine,
 } = require("../controllers/routineController");
 
-router.get("/:user_id/day", verifyToken, getUserDayRoutines);
-router.delete("/:user_id/day", verifyToken, DeleteDayRoutine);
-router.get("/:user_id/night", verifyToken, getUserNightRoutines);
-router.delete("/:user_id/night", verifyToken, DeleteNightRoutine);
+router.use(verifyToken);
+router.get("/:user_id/day", getUserDayRoutines);
+router.delete("/:user_id/day", DeleteDayRoutine);
+router.get("/:user_id/night", getUserNightRoutines);
+router.delete("/:user_id/night", DeleteNightRoutine);
 
-router.get("/:user_id/:category", verifyToken, getRecommendedProducts);
+router.get("/:user_id/:category", getRecommendedProducts);
 
-router.post("/:user_id/:category/day/:product_id", verifyToken, DayRoutine);
-router.post("/:user_id/:category/night/:product_id", verifyToken, NightRoutine);
+router.post("/:user_id/:category/day/:product_id", DayRoutine);
+router.post("/:user_id/:category/night/:product_id", NightRoutine);
 
 module.exports = router;

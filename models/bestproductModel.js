@@ -1,5 +1,6 @@
 "use strict";
 
+const client = require("../config/redistClient");
 const db = require("../config/db");
 
 const Best = {
@@ -29,16 +30,62 @@ const Best = {
 
   findProductByNameAndSkinType: (name_product, skin_type) => {
     return new Promise((resolve, reject) => {
-      const query = "SELECT * FROM best_products WHERE name_product = ? AND skin_type = ?";
+      const query =
+        "SELECT * FROM best_products WHERE name_product = ? AND skin_type = ?";
       db.query(query, [name_product, skin_type], (error, results) => {
         if (error) {
-          console.error("Error executing query:", error); 
+          console.error("Error executing query:", error);
           return reject(error);
         }
-        resolve(results[0]); 
+        resolve(results[0]);
       });
     });
-  }, 
-}
+  },
+
+  /*
+  //--------use this if you not using Memorystore Redist
+  getRecommendedProducts: async (user_id, skin_type) => {
+    const query = `
+      SELECT p.*
+      FROM products p
+      JOIN users u ON u.skin_type = p.skin_type
+      WHERE u.id = ? AND p.skin_type = ?
+    `;
+    return new Promise((resolve, reject) => {
+      db.query(query, [user_id, skin_type], (error, results) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(results);
+      });
+    });
+  },
+  */
+
+  BestProductBySkinType: async (user_id, skin_type) => {
+    const redisKey = `recommended:${user_id}:${skin_type}`;
+    const cachedData = await client.get(redisKey);
+    if (cachedData) {
+      console.log("Data from Redis cache");
+      return JSON.parse(cachedData);
+    }
+    const query = `
+SELECT p.*
+FROM products p
+JOIN users u ON u.skin_type = p.skin_type
+WHERE u.id = ? AND p.skin_type = ?
+`;
+    return new Promise((resolve, reject) => {
+      db.query(query, [user_id, skin_type], async (error, results) => {
+        if (error) {
+          reject(error);
+        }
+        await client.set(redisKey, JSON.stringify(results), "EX", 3600);
+
+        resolve(results);
+      });
+    });
+  },
+};
 
 module.exports = Best;

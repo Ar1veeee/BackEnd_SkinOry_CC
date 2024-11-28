@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const verifyToken = require("../middlewares/authMiddleware");
-const { BestProduct } = require("../controllers/bestproductController");
+const { AddBestProduct, ShowBestProduct } = require("../controllers/bestproductController");
 
-router.post("/", verifyToken, BestProduct);
+router.post("/", verifyToken, AddBestProduct);
+router.get("/", verifyToken, ShowBestProduct);
 
 module.exports = router;

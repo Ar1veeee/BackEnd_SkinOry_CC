@@ -6,7 +6,9 @@ const client = redis.createClient({
     host: process.env.REDIS_HOST,
     port: process.env.REDIS_PORT,
   },
-  password: process.env.REDIS_PASSWORD || null, // Tambahkan jika ada password
+
+  password: process.env.REDIS_PASSWORD || null, 
+
 });
 
 client.on("connect", () => {
@@ -17,7 +19,6 @@ client.on("error", (err) => {
   console.error("Error connecting to Redis:", err);
 });
 
-// Pastikan memanggil connect() untuk Redis
 (async () => {
   try {
     await client.connect();

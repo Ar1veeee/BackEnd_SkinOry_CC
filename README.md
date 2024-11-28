@@ -21,12 +21,15 @@ This is the backend application for the **SkinOry** project, which serves as an 
 - **cookie-parser** - to read, parse, and easily manage cookies sent by clients via HTTP headers.
 - **morgan** - Simplify the management of HTTP request logs (GET, POST, etc.) to the server.
 - **bcrypt** - Create a hash for the password so that it is not stored in plaintext in the database.
+- **@redis/client** - To connect the Node.js application to the Redis server.
+- **@google-cloud/pubsub** - To connect the Node.js application to the Pub/Sub resource.
+- **nodemailer** - A module for Node.js that is used to send emails easily. 
 
 ## Installations
 
 ### Prerequisites
 
-Make sure you have **Node.js** and **npm** (Node Package Manager) installed on your system.
+Make sure you have **Node.js** and **npm** (Node Package Manager) installed on your system, and add the json service account file for Pub/Sub to connect. Create Pub/Sub topic and subscription if you want to use email feature
 
 ### Installation Steps
 
@@ -54,12 +57,17 @@ Make sure you have **Node.js** and **npm** (Node Package Manager) installed on y
    Inside `.env`, customize it with your database settings and JWT keys:
 
    ```ini
-   DB_HOST=localhost
+   PORT=5000
+   DB_HOST=localhost/your-db-server
    DB_USER=root
    DB_PASS=your_password
    DB_NAME=skinory
+   REDIS_HOST=primary_endpoint_redis
+   REDIS_PORT=6379
+   REDIS_PASSWORD=your_password
+   EMAIL=your_email
+   EMAIL_PASSWORD=your_password_email
    JWT_SECRET=your_jwt_secret_key
-   PORT=5000
    ```
 
 4. **Running the application:**
@@ -818,5 +826,31 @@ Make sure you have **Node.js** and **npm** (Node Package Manager) installed on y
     "message": "Error Updating Password"
   }
   ```
+### 15. **Show Best Products**
 
+- **URL**: `/best`
+- **Metode**: `GET`
+- **Response**:
+
+  ```json
+  {
+    "id": 1,
+    "name_product": "Facewash a",
+    "skin_type": "dry",
+    "category": "facewash",
+    "price": "20000.00",
+    "rating": "4.70",
+    "image_url": "ceritanya link",
+    "store_url": "ceritanya link"
+  }
+  ```
+
+  **Error Expired Refresh Token**:
+
+  ```json
+  {
+    "status": 500,
+    "message": "Error Server"
+  }
+  ```
 ##
