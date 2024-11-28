@@ -1,6 +1,6 @@
 "use strict";
 
-const { createUser, findUserByEmail, User } = require("../models/userModel");
+const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -19,11 +19,11 @@ exports.register = async (req, res) => {
   }
 
   try {
-    const existingUser = await findUserByEmail(email);
+    const existingUser = await User.findUserByEmail(email);
     if (existingUser)
       return res.status(400).json({ message: "Email Already Exist" });
 
-    await createUser(username, email, password, skin_type);
+    await User.createUser(username, email, password, skin_type);
     res.status(201).json({ message: "Registration Successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -33,7 +33,7 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await findUserByEmail(email);
+    const user = await User.findUserByEmail(email);
     if (!user) return res.status(404).json({ message: "User Not Found" });
 
     const isPasswordValid = await bcrypt.compare(password, user.password);

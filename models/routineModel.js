@@ -122,9 +122,9 @@ const Routine = {
       });
     });
   },
-
   /*
-  //--------use this if you not using Memorystore Redist
+
+  //--------use this if you not using Memorystore Redis
   getRecommendedProducts: async (user_id, category) => {
     const query = `
       SELECT p.*
@@ -141,36 +141,9 @@ const Routine = {
       });
     });
   },
-*/
-  
- //------Use this if you using Memorystore Redist
-  getRecommendedProducts: async (user_id, category) => {
-  const redisKey = `recommended:${user_id}:${category}`;
-  const cachedData = await client.get(redisKey);
-  if (cachedData) {
-    console.log("Data from Redis cache");
-    return JSON.parse(cachedData);
-  }
-  const query = `
-SELECT p.*
-FROM products p
-JOIN users u ON u.skin_type = p.skin_type
-WHERE u.id = ? AND p.category = ?
-`;
-  return new Promise((resolve, reject) => {
-    db.query(query, [user_id, category], async (error, results) => {
-      if (error) {
-        reject(error);
-      }
-      await client.set(redisKey, JSON.stringify(results), "EX", 3600);
+  */
 
-      resolve(results);
-    });
-  });
-},
-};
-*/
-
+  //------Use this if you using Memorystore Redis
   getRecommendedProducts: async (user_id, category) => {
     const redisKey = `recommended:${user_id}:${category}`;
     const cachedData = await client.get(redisKey);
@@ -179,10 +152,10 @@ WHERE u.id = ? AND p.category = ?
       return JSON.parse(cachedData);
     }
     const query = `
-  SELECT p.*
-  FROM products p
-  JOIN users u ON u.skin_type = p.skin_type
-  WHERE u.id = ? AND p.category = ?
+SELECT p.*
+FROM products p
+JOIN users u ON u.skin_type = p.skin_type
+WHERE u.id = ? AND p.category = ?
 `;
     return new Promise((resolve, reject) => {
       db.query(query, [user_id, category], async (error, results) => {

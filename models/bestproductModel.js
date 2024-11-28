@@ -41,18 +41,18 @@ const Best = {
       });
     });
   },
-
   /*
+
   //--------use this if you not using Memorystore Redist
-  getRecommendedProducts: async (user_id, skin_type) => {
+  getRecommendedProducts: async (user_id) => {
     const query = `
-      SELECT p.*
-      FROM products p
-      JOIN users u ON u.skin_type = p.skin_type
-      WHERE u.id = ? AND p.skin_type = ?
+      SELECT b.*
+      FROM best_products b
+      JOIN users u ON u.skin_type = b.skin_type
+      WHERE u.id = ?
     `;
     return new Promise((resolve, reject) => {
-      db.query(query, [user_id, skin_type], (error, results) => {
+      db.query(query, [user_id], (error, results) => {
         if (error) {
           reject(error);
         }
@@ -62,21 +62,21 @@ const Best = {
   },
   */
 
-  BestProductBySkinType: async (user_id, skin_type) => {
-    const redisKey = `recommended:${user_id}:${skin_type}`;
+  BestProductBySkinType: async (user_id) => {
+    const redisKey = `recommended:${user_id}`;
     const cachedData = await client.get(redisKey);
     if (cachedData) {
       console.log("Data from Redis cache");
       return JSON.parse(cachedData);
     }
     const query = `
-SELECT p.*
-FROM products p
-JOIN users u ON u.skin_type = p.skin_type
-WHERE u.id = ? AND p.skin_type = ?
+SELECT b.*
+FROM best_products b
+JOIN users u ON u.skin_type = b.skin_type
+WHERE u.id = ?
 `;
     return new Promise((resolve, reject) => {
-      db.query(query, [user_id, skin_type], async (error, results) => {
+      db.query(query, [user_id], async (error, results) => {
         if (error) {
           reject(error);
         }
@@ -86,6 +86,7 @@ WHERE u.id = ? AND p.skin_type = ?
       });
     });
   },
+
 };
 
 module.exports = Best;

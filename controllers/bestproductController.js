@@ -1,5 +1,4 @@
 "use strict";
-
 const Best = require("../models/bestproductModel");
 
 exports.AddBestProduct = async (req, res) => {
@@ -54,22 +53,19 @@ exports.AddBestProduct = async (req, res) => {
 };
 
 exports.ShowBestProduct = async (req, res) => {
-  try {
-    const best = await Best.BestProductBySkinType();
-    res.status(200).json({
-      id: best.id,
-      name_product: best.name_product,
-      skin_type: best.skin_type,
-      category: best.category,
-      price: best.price,
-      rating: best.rating,
-      image_url: best.image_url,
-      store_url: best.store_url,
+  const { user_id } = req.params;
+  if (!user_id) {
+    return res.status(400).json({
+      message: "User ID is required"
     })
+  }
+  try {
+    const bests = await Best.BestProductBySkinType(user_id);
+    res.status(200).json({ bests })
   } catch (error) {
     console.error("Error show best products", error);
     res.status(500).json({
       message:"Error Server"
     })
   }
-}
+};

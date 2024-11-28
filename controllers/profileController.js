@@ -1,6 +1,6 @@
 "use strict";
 
-const { updateOldPassword, User } = require("../models/userModel");
+const User = require("../models/userModel");
 
 exports.updatePassword = async (req, res) => {
   const { user_id } = req.params;
@@ -15,7 +15,7 @@ exports.updatePassword = async (req, res) => {
   }
 
   try {
-    const result = await updateOldPassword(user_id, newPassword);
+    const result = await User.updateOldPassword(user_id, newPassword);
     if (result.affectedRows === 0) {
       return res.status(400).json({
         message: "Password needs to be filled in",
@@ -38,7 +38,7 @@ exports.Profile = async (req, res) => {
     const user = await User.findUserById(user_id);
     if (!user) return res.status(404).json({ message: "User Not Found" });
 
-    await User.showUserById(user_id);
+    await User.findUserById(user_id);
     res.status(200).json({
       Profile: {
         userID: user.id,

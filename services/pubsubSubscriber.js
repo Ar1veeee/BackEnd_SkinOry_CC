@@ -1,6 +1,6 @@
 "use strict";
 const nodemailer = require("nodemailer");
-const { User } = require("../models/userModel");
+const User  = require("../models/userModel");
 const pubsub = require("../config/googleCloud");
 const Routine = require("../models/routineModel");
 const subscriptionDay = "day-routine-deleted-topic-sub";

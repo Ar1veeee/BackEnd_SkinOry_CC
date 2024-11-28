@@ -3,7 +3,8 @@ const router = express.Router();
 const verifyToken = require("../middlewares/authMiddleware");
 const { AddBestProduct, ShowBestProduct } = require("../controllers/bestproductController");
 
-router.post("/", verifyToken, AddBestProduct);
-router.get("/", verifyToken, ShowBestProduct);
+router.use(verifyToken)
+router.post("/", AddBestProduct);
+router.get("/:user_id", ShowBestProduct);
 
 module.exports = router;

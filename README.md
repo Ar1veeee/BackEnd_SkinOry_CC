@@ -456,7 +456,7 @@ Make sure you have **Node.js** and **npm** (Node Package Manager) installed on y
   }
   ```
 
-### 9. **Product Recommendation List**
+### 9. **Product Recommendation List Based of User Skin Type**
 
 - **URL**: `/routine/:user_id/:category`
 - **Metode**: `GET`
@@ -826,9 +826,9 @@ Make sure you have **Node.js** and **npm** (Node Package Manager) installed on y
     "message": "Error Updating Password"
   }
   ```
-### 15. **Show Best Products**
+### 15. **Show Best Products Based of User Skin Type**
 
-- **URL**: `/best`
+- **URL**: `/best/:user_id`
 - **Metode**: `GET`
 - **Response**:
 

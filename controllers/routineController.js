@@ -2,7 +2,7 @@
 const pubsub = require("../config/googleCloud");
 const Routine = require("../models/routineModel");
 const Product = require("../models/productModel");
-const { User } = require("../models/userModel");
+const User  = require("../models/userModel");
 
 exports.getRecommendedProducts = async (req, res) => {
   const { user_id, category } = req.params;
