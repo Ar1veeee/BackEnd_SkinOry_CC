@@ -7,8 +7,9 @@ This is the backend application for the **SkinOry** project, which serves as an 
 - **User Registration** - New users can register by submitting the required data (e.g. username, email, password).
 - **User Login** - Users can login using valid credentials to obtain an authentication token.
 - **Protected Endpoint** - Uses middleware to protect endpoints that require JWT token authentication.
-- **Adding Product** - Endpoint to add products (not for users).
 - **Skincare Routine Management** - Endpoint to retrieve, edit or delete user data.
+- **Pub/Sub** - Sends a list of deleted products via email when a user deletes a skincare routine.
+- **Memorystore Redis** - Create a cache for frequently accessed data, for example a list of the best products.
 
 ## Technology in Use
 
@@ -24,6 +25,9 @@ This is the backend application for the **SkinOry** project, which serves as an 
 - **@redis/client** - To connect the Node.js application to the Redis server.
 - **@google-cloud/pubsub** - To connect the Node.js application to the Pub/Sub resource.
 - **nodemailer** - A module for Node.js that is used to send emails easily. 
+- **compression** - A module for Node.js that is used to compress HTTP responses, thus reducing the size of the data sent to the client. 
+- **helmet** - A module for Node.js that is used to improve the security of Express applications by setting HTTP headers. 
+- **pm2** - A module for Node.js that is used to run the application stably and allow automatic restart if the application crashes. 
 
 ## Installations
 
@@ -255,72 +259,8 @@ Make sure you have **Node.js** and **npm** (Node Package Manager) installed on y
     "error": "Detailed error message from the server"
   }
   ```
-### 4. **Add Product**
 
-- **URL**: `/product`
-- **Metode**: `POST`
-- **Body**:
-
-  ```json
-  [
-    {
-      "name_product": "Jaya Toner",
-      "skin_type": "oily",
-      "category": "toner",
-      "usage_time": "night",
-      "image_url": "link image",
-      "price": 20000,
-      "rating": 4.7
-    },
-    {
-      "name_product": "Makmur Toner",
-      "skin_type": "oily",
-      "category": "toner",
-      "usage_time": "night",
-      "image_url": "link image",
-      "price": 20000,
-      "rating": 4.7
-    }
-  ]
-  ```
-
-- **Response**:
-
-  ```json
-  {
-    "message": "Product Added Successfully"
-  }
-  ```
-
-  **Error Missing Required Fields**:
-
-  ```json
-  {
-    "status": 400,
-    "message": "All fields are required: name_product, skin_type, category, usage_time, image_url, price, rating"
-  }
-  ```
-
-  **Error Product Already Exists**:
-
-  ```json
-  {
-    "status": 400,
-    "message": "Product /name_product for skin type /skin_type already exists"
-  }
-  ```
-
-  **Error Missing Required Fields**:
-
-  ```json
-  {
-    "status": 500,
-    "message": "Failed to add product",
-    "error": "Detailed error message from the server"
-  }
-  ```
-
-### 5. **Skincare Day Routine List**
+### 4. **Skincare Day Routine List**
 
 - **URL**: `/routine/:user_id/day`
 - **Metode**: `GET`
@@ -358,7 +298,7 @@ Make sure you have **Node.js** and **npm** (Node Package Manager) installed on y
   }
   ```
 
-### 6. **Skincare Night Routine List**
+### 5. **Skincare Night Routine List**
 
 - **URL**: `/routine/:user_id/night`
 - **Metode**: `GET`
@@ -395,7 +335,7 @@ Make sure you have **Node.js** and **npm** (Node Package Manager) installed on y
     "error": "Error message"
   }
   ```
-### 7. **Skincare Day Routine Delete**
+### 6. **Skincare Day Routine Delete**
 
 - **URL**: `/routine/:user_id/day`
 - **Metode**: `DELETE`
@@ -425,7 +365,7 @@ Make sure you have **Node.js** and **npm** (Node Package Manager) installed on y
     "message": "Error Deleting Dat Routines",    
   }
   ```
-### 8. **Skincare Night Routine Delete**
+### 7. **Skincare Night Routine Delete**
 
 - **URL**: `/routine/:user_id/night`
 - **Metode**: `DELETE`
@@ -456,7 +396,7 @@ Make sure you have **Node.js** and **npm** (Node Package Manager) installed on y
   }
   ```
 
-### 9. **Product Recommendation List Based of User Skin Type**
+### 8. **Product Recommendation List Based of User Skin Type**
 
 - **URL**: `/routine/:user_id/:category`
 - **Metode**: `GET`
@@ -521,7 +461,7 @@ Make sure you have **Node.js** and **npm** (Node Package Manager) installed on y
   }
   ```
 
-### 10. **Add Day Skincare Routine**
+### 9. **Add Day Skincare Routine**
 
 - **URL**: `/routine/:user_id/:category/day/:product_id`
 - **Metode**: `POST`
@@ -599,7 +539,7 @@ Make sure you have **Node.js** and **npm** (Node Package Manager) installed on y
   }
   ```
 
-### 11. **Add Night Skincare Routine**
+### 10. **Add Night Skincare Routine**
 
 - **URL**: `/routine/:user_id/:category/night/:product_id`
 - **Metode**: `POST`
@@ -677,7 +617,7 @@ Make sure you have **Node.js** and **npm** (Node Package Manager) installed on y
   }
   ```
 
-### 12. **Refresh Token**
+### 11. **Refresh Token**
 
 - **URL**: `/refresh`
 - **Metode**: `POST`
@@ -722,7 +662,7 @@ Make sure you have **Node.js** and **npm** (Node Package Manager) installed on y
   }
   ```
 
-### 13. **Edit Password**
+### 12. **Edit Password**
 
 - **URL**: `/profile/:user`
 - **Metode**: `POST`
@@ -770,81 +710,69 @@ Make sure you have **Node.js** and **npm** (Node Package Manager) installed on y
     "message": "Error Updating Password"
   }
   ```
+### 13. **Show Best Products Based of User Skin Type**
 
-### 14. **Add Best Product**
-
-- **URL**: `/best`
-- **Metode**: `POST`
-
-- **Body**:
-
-  ```json
-  [
-    {
-      "name_product": "Facewash a",
-      "skin_type": "dry",
-      "category": "facewash",
-      "image_url": "link image",
-      "store_url": "link store",
-      "price": 20000.0,
-      "rating": 4.7
-    },
-    {
-      "name_product": "Facewash b",
-      "skin_type": "dry",
-      "category": "facewash",
-      "image_url": "link image",
-      "store_url": "link store",
-      "price": 20000.0,
-      "rating": 4.7
-    }
-  ]
-  ```
-
-- **Response**:
-
-  ```json
-  {
-    "message": "Product added successfully"
-  }
-  ```
-
-  **Error Not Inserted**:
-
-  ```json
-  {
-    "status": 400,
-    "message": "Name Product, Category, Price, Rating, Image URL, Store URL are required"
-  }
-  ```
-
-  **Error Expired Refresh Token**:
-
-  ```json
-  {
-    "status": 500,
-    "message": "Error Updating Password"
-  }
-  ```
-### 15. **Show Best Products Based of User Skin Type**
-
-- **URL**: `/best/:user_id`
+- **URL**: `/product/best/:user_id`
 - **Metode**: `GET`
 - **Response**:
 
   ```json
-  {
-    "id": 1,
-    "name_product": "Facewash a",
-    "skin_type": "dry",
-    "category": "facewash",
-    "price": "20000.00",
-    "rating": "4.70",
-    "image_url": "ceritanya link",
-    "store_url": "ceritanya link"
-  }
+  [
+    {
+      "Best_Products": [
+        {
+            "id_product": 11,
+            "name_product": "Erha21 Erha 1 Facial Wash for Normal & Dry Skin 60ml - Sabun Muka",
+            "skin_type": "dry",
+            "category": "facewash",
+            "image_url": "image url",
+            "store_url": "store url",
+            "price": 40000.00,
+            "rating": 5.00
+        },
+        {
+            "id_product": 61,
+            "name_product": "SOMETHINC Copy Paste Tinted Sunscreen SPF 40 PA++++ 10ml",
+            "skin_type": "dry",
+            "category": "sunscreen",
+            "image_url": "image url",
+            "store_url": "store url",
+            "price": 40000.00,
+            "rating": 5.00
+        },
+        {
+            "id_product": 94,
+            "name_product": "SOMETHINC GLOW MAKER AHA BHA PHA Clarifying Treatment Toner",
+            "skin_type": "dry",
+            "category": "toner",
+            "image_url": "image url",
+            "store_url": "store url",
+            "price": 40000.00,
+            "rating": 5.00
+        },
+        {
+            "id_product": 94,
+            "name_product": "SOMETHINC GLOW MAKER AHA BHA PHA Clarifying Treatment Toner",
+            "skin_type": "dry",
+            "category": "toner",
+            "image_url": "image url",
+            "store_url": "store url",
+            "price": 40000.00,
+            "rating": 5.00
+        },
+      ]
+    }
+  ]
   ```
 
+  **Error User Not Found**:
+
+  ```json
+  {
+    "status": 400,
+    "message": "User ID is required"
+  }
+  ```
   **Error Expired Refresh Token**:
 
   ```json

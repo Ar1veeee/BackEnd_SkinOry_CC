@@ -3,20 +3,22 @@
     "@google-cloud/pubsub": "^4.9.0",
     "@redis/client": "^1.6.0",
     "bcrypt": "^5.1.1",
+    "compression": "^1.7.5",
     "cookie-parser": "^1.4.7",
-    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "google-auth-library": "^9.15.0",
     "googleapis": "^144.0.0",
-    "ioredis": "^5.4.1",
+    "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "mysql2": "^3.11.4",
-    "nodemailer": "^6.9.16"
+    "nodemailer": "^6.9.16",
+    "pm2": "^5.4.3"
   },
   "name": "cc_backends_apis",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "devDependencies": {
     "@eslint/js": "^9.14.0",
     "eslint": "^9.14.0",
@@ -24,10 +26,15 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "start": "pm2 start server.js --name 'main_backend'"
+  },
+  "engines": {
+    "node": ">=18.x",
+    "npm": ">=9.x"
   },
   "keywords": [],
-  "author": "",
+  "author": "Alief Arifin <aliefarifin99@gmail.com>",
   "license": "ISC",
-  "description": ""
+  "description": "An Express-based API for managing user routines and skin products."
 }

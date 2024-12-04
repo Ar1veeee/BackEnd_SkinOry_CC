@@ -2,10 +2,12 @@
 
 const User = require("../models/userModel");
 
+// Update User's Password
 exports.updatePassword = async (req, res) => {
   const { user_id } = req.params;
   const { newPassword } = req.body;
 
+  // Regex to check if the password starts with an uppercase letter and is at least 8 characters long
   const passwordRegex = /^[A-Z].{7,}$/;
   if (!passwordRegex.test(newPassword)) {
     return res.status(400).json({
@@ -32,6 +34,7 @@ exports.updatePassword = async (req, res) => {
   }
 };
 
+// Get user's profile
 exports.Profile = async (req, res) => {
   const { user_id } = req.params;
   try {

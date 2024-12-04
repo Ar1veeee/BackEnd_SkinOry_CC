@@ -5,17 +5,18 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
+// User Registration
+// Handles user registration by validating the password format,
+// checking for existing email, and saving new user data.
 exports.register = async (req, res) => {
   const { username, email, password, skin_type } = req.body;
 
   const passwordRegex = /^[A-Z].{7,}$/;
   if (!passwordRegex.test(password)) {
-    return res
-      .status(400)
-      .json({
-        message:
-          "Password must be at least 8 characters and begin with uppercase letters.",
-      });
+    return res.status(400).json({
+      message:
+        "Password must be at least 8 characters and begin with uppercase letters.",
+    });
   }
 
   try {
@@ -30,6 +31,9 @@ exports.register = async (req, res) => {
   }
 };
 
+// User Login
+// Handles user login by verifying email and password,
+// and generating access and refresh tokens.
 exports.login = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -50,7 +54,7 @@ exports.login = async (req, res) => {
     await User.createOrUpdateAuthToken(user.id, activeToken, refreshToken);
 
     res.cookie("refreshToken", refreshToken, {
-      httpOnly: true, 
+      httpOnly: true,
       secure: true,
       sameSite: "Strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -69,6 +73,9 @@ exports.login = async (req, res) => {
   }
 };
 
+// Refresh Active Token
+// Generates a new active token using the refresh token,
+// ensuring continued authentication without requiring a login.
 exports.refreshToken = async (req, res) => {
   const refresh_token = req.cookies.refreshToken;
 

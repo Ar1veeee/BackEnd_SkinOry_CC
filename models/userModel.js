@@ -5,6 +5,7 @@
 
 
   const User = {
+    // Creates a new user with hashed password and specified skin type
     createUser: async (username, email, password, skin_type) => {
       const query = `
       INSERT INTO users (username, email, password, skin_type) VALUES (?, ?, ?, ?)
@@ -18,6 +19,7 @@
       })
     },
 
+    // Updates an existing user's password
     updateOldPassword: async (user_id, password) => {
       const query = `
         UPDATE users SET password = ? WHERE id = ?
@@ -31,6 +33,7 @@
       });
     },
 
+    // Finds a user by their email address
     findUserByEmail: async (email) => {
       const query = `
           SELECT * FROM users WHERE email = ?
@@ -43,6 +46,7 @@
       });
     },
 
+    // Finds a user by their unique ID
     findUserById: async (user_id) => {
       const query = `
           SELECT * FROM users WHERE id = ?
@@ -55,6 +59,7 @@
       });
     },
 
+    // Creates or updates authentication tokens for a user
     createOrUpdateAuthToken: (user_id, activeToken, refreshToken) => {
       return new Promise((resolve, reject) => {
         db.query(
@@ -87,6 +92,7 @@
       });
     },
 
+    // Finds authentication tokens for a given user ID
     findAuthByUserId: (userId) => {
       return new Promise((resolve, reject) => {
         db.query(

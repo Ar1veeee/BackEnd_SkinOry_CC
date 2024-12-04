@@ -3,6 +3,7 @@ const client = require("../config/redistClient");
 const db = require("../config/db");
 
 const Routine = {
+  // Adds a product to the user's day routine
   addDayRoutine: async (user_id, product_id, category) => {
     const query = `
       INSERT INTO day_routines (user_id, product_id, category)
@@ -18,6 +19,7 @@ const Routine = {
     });
   },
 
+  // Adds a product to the user's night routine
   addNightRoutine: async (user_id, product_id, category) => {
     const query = `
       INSERT INTO night_routines (user_id, product_id, category)
@@ -33,6 +35,7 @@ const Routine = {
     });
   },
 
+  // Retrieves all products in the user's day routine
   getDayRoutinesByUserId: async (user_id) => {
     const query = `
       SELECT p.id_product, p.name_product, p.skin_type, p.category
@@ -50,6 +53,7 @@ const Routine = {
     });
   },
 
+  // Deletes all day routines for a given user ID
   deleteDayRoutinesByUserId: async (user_id) => {
     const query = `
       DELETE FROM day_routines WHERE user_id = ?
@@ -64,6 +68,7 @@ const Routine = {
     });
   },
 
+  // Retrieves all products in the user's night routine
   getNightRoutinesByUserId: async (user_id) => {
     const query = `
       SELECT p.id_product, p.name_product, p.skin_type, p.category
@@ -81,6 +86,7 @@ const Routine = {
     });
   },
 
+  // Deletes all night routines for a given user ID
   deleteNightRoutinesByUserId: async (user_id) => {
     const query = `
       DELETE FROM night_routines WHERE user_id = ?
@@ -95,6 +101,7 @@ const Routine = {
     });
   },
 
+  // Finds a specific product in the user's day routine by both user ID and product ID
   findDayRoutineByUserAndProduct: async (user_id, product_id) => {
     const query = `
       SELECT * FROM day_routines WHERE user_id = ? AND product_id = ?
@@ -109,6 +116,7 @@ const Routine = {
     });
   },
 
+  // Finds a specific product in the user's night routine by both user ID and product ID
   findNightRoutineByUserAndProduct: async (user_id, product_id) => {
     const query = `
       SELECT * FROM night_routines WHERE user_id = ? AND product_id = ?
@@ -122,28 +130,9 @@ const Routine = {
       });
     });
   },
-  /*
 
-  //--------use this if you not using Memorystore Redis
-  getRecommendedProducts: async (user_id, category) => {
-    const query = `
-      SELECT p.*
-      FROM products p
-      JOIN users u ON u.skin_type = p.skin_type
-      WHERE u.id = ? AND p.category = ?
-    `;
-    return new Promise((resolve, reject) => {
-      db.query(query, [user_id, category], (error, results) => {
-        if (error) {
-          reject(error);
-        }
-        resolve(results);
-      });
-    });
-  },
-  */
-
-  //------Use this if you using Memorystore Redis
+  // Fetching recommended products based on user's skin type and product category,
+  // with caching in Redis to improve performance
   getRecommendedProducts: async (user_id, category) => {
     const redisKey = `recommended:${user_id}:${category}`;
     const cachedData = await client.get(redisKey);
@@ -169,4 +158,5 @@ WHERE u.id = ? AND p.category = ?
     });
   },
 };
+
 module.exports = Routine;

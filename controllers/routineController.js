@@ -4,6 +4,7 @@ const Routine = require("../models/routineModel");
 const Product = require("../models/productModel");
 const User  = require("../models/userModel");
 
+// Get Product Recommendations for Each Selected Category
 exports.getRecommendedProducts = async (req, res) => {
   const { user_id, category } = req.params;
 
@@ -24,6 +25,7 @@ exports.getRecommendedProducts = async (req, res) => {
   }
 };
 
+// Add Product Based on the Selected Category into the User's Day Routine
 exports.DayRoutine = async (req, res) => {
   const { user_id, category, product_id } = req.params;
   if (!user_id || !product_id || !category) {
@@ -73,6 +75,7 @@ exports.DayRoutine = async (req, res) => {
   }
 };
 
+//Delete All User's Day Routines
 exports.DeleteDayRoutine = async (req, res) => {
   const { user_id } = req.params;
 
@@ -109,6 +112,7 @@ exports.DeleteDayRoutine = async (req, res) => {
   }
 };
 
+// Add Product Based on the Selected Category into the User's Night Routine
 exports.NightRoutine = async (req, res) => {
   const { user_id, category, product_id } = req.params;
 
@@ -159,6 +163,7 @@ exports.NightRoutine = async (req, res) => {
   }
 };
 
+//Delete All User's Night Routines
 exports.DeleteNightRoutine = async (req, res) => {
   const { user_id } = req.params;
 
@@ -195,6 +200,7 @@ exports.DeleteNightRoutine = async (req, res) => {
   }
 };
 
+// Get All User's Day Routines
 exports.getUserDayRoutines = async (req, res) => {
   const { user_id } = req.params;
 
@@ -213,6 +219,7 @@ exports.getUserDayRoutines = async (req, res) => {
   }
 };
 
+// Get All User's Night Routines
 exports.getUserNightRoutines = async (req, res) => {
   const { user_id } = req.params;
 

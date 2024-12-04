@@ -12,8 +12,10 @@ const {
 } = require("../controllers/routineController");
 
 router.use(verifyToken);
+
 router.get("/:user_id/day", getUserDayRoutines);
 router.delete("/:user_id/day", DeleteDayRoutine);
+
 router.get("/:user_id/night", getUserNightRoutines);
 router.delete("/:user_id/night", DeleteNightRoutine);
 

@@ -21,6 +21,7 @@ CREATE TABLE products (
     category ENUM('facewash', 'sunscreen', 'moisturizer', 'toner') NOT NULL,
     usage_time ENUM('day', 'general') NOT NULL,
     image_url VARCHAR(255),
+    store_url VARCHAR(500),
     price DECIMAL(10, 2),
     rating DECIMAL(3, 2),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -44,17 +45,4 @@ CREATE TABLE night_routines (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id_product) ON DELETE CASCADE
-);
-
-
-CREATE TABLE best_products (
-    id INT AUTO_INCREMENT PRIMARY KEY,          
-    name_product VARCHAR(255) NOT NULL,
-    skin_type ENUM('dry', 'oily', 'normal') NOT NULL,                 
-    category VARCHAR(100) NOT NULL,             
-    price DECIMAL(10, 2) NOT NULL,              
-    rating DECIMAL(3, 2),                            
-    image_url VARCHAR(500),                     
-    store_url VARCHAR(500),                     
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  
 );
