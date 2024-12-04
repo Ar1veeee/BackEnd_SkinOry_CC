@@ -37,8 +37,8 @@ async function sendEmail(user, subject, routines, action) {
             color: #333;
           }
           .container {
-            width: 100%;
-            max-width: 600px;
+            inline-size: 100%;
+            max-inline-size: 600px;
             margin: 0 auto;
             padding: 20px;
             background-color: #f9f9f9;
@@ -62,7 +62,7 @@ async function sendEmail(user, subject, routines, action) {
           }
           .product-list li {
             padding: 8px;
-            margin-bottom: 10px;
+            margin-block-end: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
             background-color: #f7f7f7;
@@ -71,7 +71,7 @@ async function sendEmail(user, subject, routines, action) {
             text-align: center;
             font-size: 12px;
             color: #777;
-            margin-top: 20px;
+            margin-block-start: 20px;
           }
           .footer a {
             color: #4CAF50;
