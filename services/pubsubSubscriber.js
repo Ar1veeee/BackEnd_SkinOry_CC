@@ -7,6 +7,8 @@ const subscriptionDay = "day-routine-deleted-topic-sub";
 const subscriptionNight = "night-routine-deleted-topic-sub";
 require("dotenv").config();
 
+console.log('Listening on project:', pubsub.projectId);
+
 async function sendEmail(user, subject, routines, action) {
   const transporter = nodemailer.createTransport({
     service: "gmail",

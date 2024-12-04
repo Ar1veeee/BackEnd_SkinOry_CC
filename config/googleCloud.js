@@ -1,9 +1,12 @@
-const { PubSub } = require("@google-cloud/pubsub");
-const path = require("path");
+const { PubSub } = require('@google-cloud/pubsub');
+require('dotenv').config();
 
-const serviceAccountPath = path.join(__dirname, "service-account.json");
+console.log('GOOGLE_CLOUD_PROJECT:', process.env.GOOGLE_CLOUD_PROJECT);
+console.log('GOOGLE_APPLICATION_CREDENTIALS:', process.env.GOOGLE_APPLICATION_CREDENTIALS);
+
 const pubsub = new PubSub({
-  keyFilename: serviceAccountPath,
+  projectId: process.env.GOOGLE_CLOUD_PROJECT, 
+  keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS, 
 });
 
 module.exports = pubsub;

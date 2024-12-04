@@ -16,11 +16,11 @@ CREATE TABLE auth (
 
 CREATE TABLE products (
     id_product INT AUTO_INCREMENT PRIMARY KEY,
-    name_product VARCHAR(100) NOT NULL,
+    name_product VARCHAR(500) NOT NULL,
     skin_type ENUM('dry', 'oily', 'normal') NOT NULL,
     category ENUM('facewash', 'sunscreen', 'moisturizer', 'toner') NOT NULL,
     usage_time ENUM('day', 'general') NOT NULL,
-    image_url VARCHAR(255),
+    image_url VARCHAR(500),
     store_url VARCHAR(500),
     price DECIMAL(10, 2),
     rating DECIMAL(3, 2),
